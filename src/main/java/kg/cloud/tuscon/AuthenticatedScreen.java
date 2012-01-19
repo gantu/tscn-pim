@@ -1,6 +1,5 @@
 package kg.cloud.tuscon;
 
-import kg.cloud.tuscon.dao.PersonContainer;
 import kg.cloud.tuscon.domain.SearchFilter;
 import kg.cloud.tuscon.i18n.PimMessages;
 import kg.cloud.tuscon.ui.HelpWindow;
@@ -10,8 +9,6 @@ import kg.cloud.tuscon.ui.PersonForm;
 import kg.cloud.tuscon.ui.PersonList;
 import kg.cloud.tuscon.ui.SearchView;
 import kg.cloud.tuscon.ui.SharingOptions;
-
-
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -59,10 +56,10 @@ public class AuthenticatedScreen extends VerticalLayout implements ValueChangeLi
 	public AuthenticatedScreen(MyVaadinApplication app) {
 		this.app=app;
 		
-		newContact=new Button(app.getMessage(PimMessages.NewContact));
-		search=new Button(app.getMessage(PimMessages.SearchContact));
-		share=new Button(app.getMessage(PimMessages.ShareContact));
-		help=new Button(app.getMessage(PimMessages.Help));
+		newContact = new Button("Add contact");
+		search = new Button("Search");
+		share = new Button("Share");
+		help = new Button("Help");
 		
 		this.addComponent(createToolbar());
 		this.addComponent(hSplitPanel);
@@ -72,7 +69,7 @@ public class AuthenticatedScreen extends VerticalLayout implements ValueChangeLi
 		hSplitPanel.setFirstComponent(navTree);
 		setMainComponent(getListView());
 		
-		
+		navTree.addListener((ItemClickListener)this);
 		this.setSizeFull();
 		
 		
@@ -114,30 +111,27 @@ public class AuthenticatedScreen extends VerticalLayout implements ValueChangeLi
 	}
 	
 	
-	@SuppressWarnings("unused")
 	private void showListView(){
 		setMainComponent(getListView());
 	}
 	
-	@SuppressWarnings("unused")
 	private void showSearchView(){
 		setMainComponent(getSearchView());
 	}
 
-	@SuppressWarnings("unused")
 	private void showShareWindow() {
 		app.getMainWindow().addWindow(getSharingOptions());
 	}
 	
-	@SuppressWarnings("unused")
 	private void showHelpWindow() {
+		
 		app.getMainWindow().addWindow(getHelpWindow());
 	}
 
 	
 	private Component getSearchView() {
 		if(searchView==null){
-			searchView=new SearchView(app);
+			searchView=new SearchView(app,this);
 		}
 		return searchView;
 	}
@@ -152,6 +146,7 @@ public class AuthenticatedScreen extends VerticalLayout implements ValueChangeLi
 	private ListView getListView(){
 		if(listView==null){
 			personList=new PersonList(app);
+			personList.addListener((ValueChangeListener)this);
 			personForm=new PersonForm(app);
 			listView=new ListView(personList,personForm);
 		}

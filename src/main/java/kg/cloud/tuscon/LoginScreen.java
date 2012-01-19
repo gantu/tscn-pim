@@ -45,12 +45,12 @@ public class LoginScreen extends VerticalLayout {
 		Button turkish=new Button(app.getMessage(PimMessages.AppLanguageTurkish));
 		turkish.addListener(new SwitchLanguage(app));
 		turkish.setEnabled(!app.getLocale().getLanguage().equals("tr"));
-		languageBar.addComponent(turkish);
+		//languageBar.addComponent(turkish);
 		
 		Button russian=new Button(app.getMessage(PimMessages.AppLanguageRussian));
 		russian.addListener(new SwitchLanguage(app));
 		russian.setEnabled(!app.getLocale().getLanguage().equals("ru"));
-		languageBar.addComponent(russian);
+	//	languageBar.addComponent(russian);
 		
 		Panel loginPanel=new Panel(app.getMessage(PimMessages.Login));
 		loginPanel.setWidth("400px");

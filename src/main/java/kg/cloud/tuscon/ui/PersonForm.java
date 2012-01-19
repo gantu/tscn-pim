@@ -40,7 +40,7 @@ public class PersonForm extends Form implements ClickListener {
 	private Person newPerson = null;
 
 	public PersonForm(MyVaadinApplication app) {
-		app = app;
+		this.app = app;
 		
 		HorizontalLayout footer = new HorizontalLayout();
 		footer.setSpacing(true);
@@ -67,6 +67,11 @@ public class PersonForm extends Form implements ClickListener {
 		 * created
 		 */
 		setFormFieldFactory(new DefaultFieldFactory() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public Field createField(Item item, Object propertyId,
 					Component uiContext) {
@@ -165,7 +170,7 @@ public class PersonForm extends Form implements ClickListener {
 	public void addContact() {
 		// Create a temporary item for the form
 		newPerson = new Person();
-		setItemDataSource(new BeanItem(newPerson));
+		setItemDataSource(new BeanItem<Person>(newPerson));
 		newContactMode = true;
 		setReadOnly(false);
 	}

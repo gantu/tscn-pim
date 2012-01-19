@@ -40,6 +40,11 @@ public class PersonList extends Table {
 
 		// customize email column to have mailto: links using column generator
 		addGeneratedColumn("email", new ColumnGenerator() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public Component generateCell(Table source, Object itemId,
 					Object columnId) {
 				Person p = (Person) itemId;

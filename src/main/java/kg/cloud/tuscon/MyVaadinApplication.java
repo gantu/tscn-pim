@@ -46,7 +46,7 @@ public class MyVaadinApplication extends Application implements
 
 	@Override
 	public void init() {
-		setTheme("runo");
+		setTheme("contacts");
 		final ResourceBundle i18n = ResourceBundle.getBundle(
 				PimMessages.class.getName(), getLocale());
 		this.getContext().addTransactionListener(this);

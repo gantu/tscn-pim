@@ -1,5 +1,6 @@
 package kg.cloud.tuscon.ui;
 
+import kg.cloud.tuscon.AuthenticatedScreen;
 import kg.cloud.tuscon.MyVaadinApplication;
 import kg.cloud.tuscon.dao.PersonContainer;
 import kg.cloud.tuscon.domain.SearchFilter;
@@ -26,9 +27,12 @@ public class SearchView extends Panel {
 	private CheckBox saveSearch;
 	private TextField searchName;
 	private MyVaadinApplication app;
+	private AuthenticatedScreen as;
 
-	public SearchView(final MyVaadinApplication app) {
+	public SearchView(MyVaadinApplication app,AuthenticatedScreen as) {
 		this.app = app;
+		this.as=as;
+		
 		addStyleName("view");
 		
 		setCaption("Search contacts");
@@ -59,12 +63,22 @@ public class SearchView extends Panel {
 		saveSearch.setValue(true);
 		saveSearch.setImmediate(true);
 		saveSearch.addListener(new ClickListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void buttonClick(ClickEvent event) {
 				searchName.setVisible(event.getButton().booleanValue());
 			}
 		});
 
 		search.addListener(new Button.ClickListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void buttonClick(ClickEvent event) {
 				performSearch();
 			}
@@ -97,8 +111,8 @@ public class SearchView extends Panel {
 						Notification.TYPE_WARNING_MESSAGE);
 				return;
 			}
-			//app.saveSearch(searchFilter);
+			as.saveSearch(searchFilter);
 		}
-		//app.search(searchFilter);
+		as.search(searchFilter);
 	}
 }
