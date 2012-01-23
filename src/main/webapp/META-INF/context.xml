@@ -1,2 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context antiJARLocking="true" path="/tuscon"/>
+<Context debug="5" docBase="/uims" path="/uims" reloadable="true"
+	antiJARLocking="true">
+	<Resource auth="Container" driverClassName="com.mysql.jdbc.Driver"
+		maxActive="-1" maxIdle="30" maxWait="10000" name="jdbc/iaauDB"
+		password="1qaz" pooling="false" removeAbandoned="true"
+		removeAbandonedTimeout="30" type="javax.sql.DataSource" url="jdbc:mysql://localhost:3306/tuscon"
+		username="user" />
+</Context>

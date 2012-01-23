@@ -1,7 +1,5 @@
 package kg.cloud.tuscon.ui;
 
-import kg.cloud.tuscon.MyVaadinApplication;
-
 import com.vaadin.ui.Tree;
 
 public class NavigationTree extends Tree{

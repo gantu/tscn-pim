@@ -9,14 +9,53 @@ public class Person implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private Integer id=null;
+	private String firstName = "";
 	private String lastName = "";
+	private String gender="";
+	private String dob="";
 	private String email = "";
+	private String secondaryEmail="";
 	private String phoneNumber = "";
+	private String mobilePhoneNumber="";
+	private String faxNumber="";
 	private String streetAddress = "";
 	private Integer postalCode = null;
 	private String city = "";
-
-	private String firstName = "";
+	private String companyType ="";
+	private String websiteUrl="";
+	private String sektor="";
+	private String foundation="";
+	private String membership="";
+	private String common="";
+	
+	public Person(){}
+	
+	public Person(Integer id, String fName, String lName,
+			String gender, String dob, String email, String sEmail,
+			String phone, String mobile, String fax, String street,
+			int postal, String city, String compType, String sektor,
+			String website, String found, String member, String common) {
+		this.id=id;
+		this.firstName=fName;
+		this.lastName=lName;
+		this.gender=gender;
+		this.dob=dob;
+		this.email=email;
+		this.secondaryEmail=sEmail;
+		this.phoneNumber=phone;
+		this.mobilePhoneNumber=mobile;
+		this.faxNumber=fax;
+		this.streetAddress=street;
+		this.postalCode=postal;
+		this.city=city;
+		this.companyType=compType;
+		this.sektor=sektor;
+		this.websiteUrl=website;
+		this.foundation=found;
+		this.membership=member;
+		this.common=common;
+	}
 
 	public String getFirstName() {
 		return firstName;
@@ -72,6 +111,102 @@ public class Person implements Serializable {
 
 	public void setCity(String city) {
 		this.city = city;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public String getDob() {
+		return dob;
+	}
+
+	public void setDob(String dob) {
+		this.dob = dob;
+	}
+
+	public String getSecondaryEmail() {
+		return secondaryEmail;
+	}
+
+	public void setSecondaryEmail(String secondaryEmail) {
+		this.secondaryEmail = secondaryEmail;
+	}
+
+	public String getMobilePhoneNumber() {
+		return mobilePhoneNumber;
+	}
+
+	public void setMobilePhoneNumber(String mobilePhoneNumber) {
+		this.mobilePhoneNumber = mobilePhoneNumber;
+	}
+
+	public String getFaxNumber() {
+		return faxNumber;
+	}
+
+	public void setFaxNumber(String faxNumber) {
+		this.faxNumber = faxNumber;
+	}
+
+	public String getCompanyType() {
+		return companyType;
+	}
+
+	public void setCompanyType(String companyType) {
+		this.companyType = companyType;
+	}
+
+	public String getWebsiteUrl() {
+		return websiteUrl;
+	}
+
+	public void setWebsiteUrl(String websiteUrl) {
+		this.websiteUrl = websiteUrl;
+	}
+
+	public String getSektor() {
+		return sektor;
+	}
+
+	public void setSektor(String sektor) {
+		this.sektor = sektor;
+	}
+
+	public String getFoundation() {
+		return foundation;
+	}
+
+	public void setFoundation(String foundation) {
+		this.foundation = foundation;
+	}
+
+	public String getMembership() {
+		return membership;
+	}
+
+	public void setMembership(String membership) {
+		this.membership = membership;
+	}
+
+	public String getCommon() {
+		return common;
+	}
+
+	public void setCommon(String common) {
+		this.common = common;
 	}
 
 }
