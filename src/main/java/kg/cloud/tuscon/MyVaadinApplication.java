@@ -15,11 +15,7 @@
  */
 package kg.cloud.tuscon;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
-
 import kg.cloud.tuscon.dao.PersonContainer;
-import kg.cloud.tuscon.i18n.PimMessages;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -40,17 +36,15 @@ public class MyVaadinApplication extends Application implements
 
 	private static ThreadLocal<MyVaadinApplication> currentApplication = new ThreadLocal<MyVaadinApplication>();
 	private Window window;
-	private ResourceBundle i18nBundle;
+
 	ViewManager viewManager;
-	private PersonContainer dataSource = PersonContainer.createWithTestData();
 
 	@Override
 	public void init() {
 		setTheme("contacts");
-		final ResourceBundle i18n = ResourceBundle.getBundle(
-				PimMessages.class.getName(), getLocale());
+
 		this.getContext().addTransactionListener(this);
-		this.window = new Window(i18n.getString(PimMessages.AppTitle));
+		this.window = new Window("PIM");
 		this.setMainWindow(window);
 		viewManager = new ViewManager(window);
 		viewManager.switchScreen(LoginScreen.class.getName(), new LoginScreen(
@@ -120,29 +114,8 @@ public class MyVaadinApplication extends Application implements
 		}
 	}
 
-	public void setLocale(Locale locale) {
-		super.setLocale(locale);
-		i18nBundle = ResourceBundle.getBundle(PimMessages.class.getName(),
-				getLocale());
-	}
-
-	public ResourceBundle getBundle() {
-
-		return i18nBundle;
-	}
-
-	public String getMessage(String key) {
-
-		return i18nBundle.getString(key);
-	}
-
 	public ViewManager getViewManager() {
 		return viewManager;
 	}
-	
 
-	public PersonContainer getDataSource() {
-		return dataSource;
-	}
-	
 }

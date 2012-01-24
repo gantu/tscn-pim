@@ -1,14 +1,12 @@
 package kg.cloud.tuscon.ui;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
-import kg.cloud.tuscon.MyVaadinApplication;
+import kg.cloud.tuscon.AuthenticatedScreen;
 import kg.cloud.tuscon.dao.PersonContainer;
+import kg.cloud.tuscon.domain.Membership;
 import kg.cloud.tuscon.domain.Person;
-import kg.cloud.tuscon.i18n.PimMessages;
-
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.EmailValidator;
@@ -21,6 +19,9 @@ import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.ListSelect;
+import com.vaadin.ui.PopupDateField;
+import com.vaadin.ui.Select;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Component;
 
@@ -33,35 +34,64 @@ public class PersonForm extends Form implements ClickListener {
 	private Button save = new Button("Save", (ClickListener) this);
 	private Button cancel = new Button("Cancel", (ClickListener) this);
 	private Button edit = new Button("Edit", (ClickListener) this);
-	private final ComboBox cities = new ComboBox("City");
+	private Button delete=new Button("Delete",(ClickListener)this);
+	
+	private final Select organizations =new Select("Organization");
+	private final ComboBox memberships = new ComboBox("Membership");
+	private final ListSelect sektors = new ListSelect("Sektors");
+	private final PopupDateField datetime=new PopupDateField("Date Of Birth");
 
-	private MyVaadinApplication app;
+	private AuthenticatedScreen as;
 	private boolean newContactMode = false;
 	private Person newPerson = null;
 
-	public PersonForm(MyVaadinApplication app) {
-		this.app = app;
+	public PersonForm(AuthenticatedScreen as) {
+		this.as = as;
 		
+		setWriteThrough(false);
 		HorizontalLayout footer = new HorizontalLayout();
 		footer.setSpacing(true);
 		footer.addComponent(save);
 		footer.addComponent(cancel);
+		footer.addComponent(edit);
+		footer.addComponent(delete);
+		footer.setVisible(false);
 		setFooter(footer);
 
 		/* Allow the user to enter new cities */
-		cities.setNewItemsAllowed(true);
+		organizations.setNewItemsAllowed(false);
 		/* We do not want to use null values */
-		cities.setNullSelectionAllowed(false);
+		organizations.setNullSelectionAllowed(false);
 		/* Add an empty city used for selecting no city */
-		cities.addItem("");
-
+		//organizations.addItem("");
+		
+		organizations.setContainerDataSource(as.getOrganizationsSource());
+		organizations.setItemCaptionMode(Select.ITEM_CAPTION_MODE_PROPERTY);
+		organizations.setItemCaptionPropertyId("orgName");
+		
+		memberships.setNewItemsAllowed(false);
+		/* We do not want to use null values */
+		memberships.setNullSelectionAllowed(false);
+		/* Add an empty city used for selecting no city */
+		//memberships.addItem("");
+		
+		
+		memberships.setContainerDataSource(as.getMembershipSource());
+		memberships.setItemCaptionMode(Select.ITEM_CAPTION_MODE_PROPERTY);
+		memberships.setItemCaptionPropertyId("unityName");
+		//memberships.setValue(this.getItemDataSource().getItemProperty("membership"));
+		
+		sektors.setRows(10);
+		sektors.setNullSelectionAllowed(true);
+		sektors.setMultiSelect(true);
+		//sektors.setImmediate(true);
+		sektors.setItemCaptionMode(Select.ITEM_CAPTION_MODE_PROPERTY);
+		sektors.setItemCaptionPropertyId("sektorName");
+		sektors.setContainerDataSource(as.getSektorsSource());
+		
+		
 		/* Populate cities select using the cities in the data container */
-		PersonContainer ds = app.getDataSource();
-		for (Iterator<Person> it = ds.getItemIds().iterator(); it.hasNext();) {
-			String city = (it.next()).getCity();
-			cities.addItem(city);
-		}
-
+		
 		/*
 		 * Field factory for overriding how the component for city selection is
 		 * created
@@ -75,9 +105,23 @@ public class PersonForm extends Form implements ClickListener {
 			@Override
 			public Field createField(Item item, Object propertyId,
 					Component uiContext) {
-				if (propertyId.equals("city")) {
-					cities.setWidth("200px");
-					return cities;
+				if (propertyId.equals("organization")) {
+					organizations.setWidth("200px");
+					return organizations;
+				}
+				
+				if(propertyId.equals("membership")){
+					memberships.setWidth("200px");
+					return memberships;
+				}
+				if(propertyId.equals("sektor")){
+					sektors.setWidth("200px");
+					return sektors;
+				}
+				if(propertyId.equals("dob")){
+					datetime.setWidth("200px");
+					datetime.setDateFormat("yyyy-MM-dd");
+					return datetime;
 				}
 
 				Field field = super.createField(item, propertyId, uiContext);
@@ -119,7 +163,10 @@ public class PersonForm extends Form implements ClickListener {
 			commit();
 			if (newContactMode) {
 				/* We need to add the new person to the container */
-				Item addedItem = app.getDataSource().addItem(newPerson);
+				newPerson.setMembership(memberships.getValue().toString());
+				newPerson.setOrganization(organizations.getValue().toString());
+				newPerson.setSektor(sektors.getValue().toString());
+				Item addedItem = as.getDataSource().addItem(newPerson);
 				/*
 				 * We must update the form to use the Item from our datasource
 				 * as we are now in edit mode (no longer in add mode)
@@ -165,6 +212,7 @@ public class PersonForm extends Form implements ClickListener {
 		save.setVisible(!readOnly);
 		cancel.setVisible(!readOnly);
 		edit.setVisible(readOnly);
+		delete.setVisible(readOnly);
 	}
 
 	public void addContact() {

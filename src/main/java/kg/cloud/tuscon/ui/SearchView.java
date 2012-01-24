@@ -4,7 +4,6 @@ import kg.cloud.tuscon.AuthenticatedScreen;
 import kg.cloud.tuscon.MyVaadinApplication;
 import kg.cloud.tuscon.dao.PersonContainer;
 import kg.cloud.tuscon.domain.SearchFilter;
-import kg.cloud.tuscon.i18n.PimMessages;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;

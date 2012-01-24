@@ -1,29 +1,32 @@
 package kg.cloud.tuscon.dao;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Random;
 
-import kg.cloud.tuscon.MyVaadinApplication;
 import kg.cloud.tuscon.domain.Person;
 
 import com.vaadin.data.util.BeanItemContainer;
 
+@SuppressWarnings("serial")
+public class PersonContainer extends BeanItemContainer<Person> implements
+		Serializable {
 
-public class PersonContainer extends BeanItemContainer<Person> implements Serializable{
-	
 	public static final Object[] NATURAL_COL_ORDER = new Object[] {
-		"firstName", "lastName", "email", "phoneNumber", "streetAddress",
-		"postalCode", "city" };
+			"firstName", "lastName", "gender", "dob", "company", "email",
+			"secondaryEmail", "phoneNumber", "mobilePhoneNumber", "faxNumber",
+			"streetAddress", "postalCode", "companyType", "websiteUrl",
+			"sektor", "organization", "foundation", "membership", "common" };
 
 	public static final String[] COL_HEADERS_ENGLISH = new String[] {
-		"First name", "Last name", "Email", "Phone number",
-		"Street Address", "Postal Code", "City" };
-	
+			"First name", "Last name","Gender","Date Of Birth","Company","E-mail","2nd e-mail","Phone number","Mobile","Fax",
+			"Street Address", "Postal Code","Company Type","Website","sektor","Organization","Foundation","Membership","Common" };
 
-	public PersonContainer() throws InstantiationException,IllegalAccessException{
+	public PersonContainer() throws InstantiationException,
+			IllegalAccessException {
 		super(Person.class);
 	}
-	
+
 	public static PersonContainer createWithTestData() {
 		final String[] fnames = { "Peter", "Alice", "Joshua", "Mike", "Olivia",
 				"Nina", "Alex", "Rita", "Dan", "Umberto", "Henrik", "Rene",
@@ -62,7 +65,6 @@ public class PersonContainer extends BeanItemContainer<Person> implements Serial
 				Person p = new Person();
 				p.setFirstName(fnames[r.nextInt(fnames.length)]);
 				p.setLastName(lnames[r.nextInt(lnames.length)]);
-				p.setCity(cities[r.nextInt(cities.length)]);
 				p.setEmail(p.getFirstName().toLowerCase() + "."
 						+ p.getLastName().toLowerCase() + "@vaadin.com");
 				p.setPhoneNumber("+358 02 555 " + r.nextInt(10) + r.nextInt(10)
@@ -83,6 +85,27 @@ public class PersonContainer extends BeanItemContainer<Person> implements Serial
 			e.printStackTrace();
 		}
 
+		return c;
+	}
+
+	public static PersonContainer getAllFromDB() {
+		PersonContainer c = null;
+		ArrayList<Person> personList = null;
+
+		try {
+			c = new PersonContainer();
+			DbPerson dbPerson = new DbPerson();
+			dbPerson.connect();
+			dbPerson.execSQLSelectAll();
+			personList = dbPerson.getArray();
+			dbPerson.close();
+			for (int i = 0; i < personList.size(); i++) {
+				c.addItem(personList.get(i));
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return c;
 	}
 

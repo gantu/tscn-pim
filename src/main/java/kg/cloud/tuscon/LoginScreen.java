@@ -1,9 +1,5 @@
 package kg.cloud.tuscon;
 
-import java.util.Locale;
-
-import kg.cloud.tuscon.i18n.PimMessages;
-
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -11,8 +7,6 @@ import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 
 import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.LoginForm;
 import com.vaadin.ui.LoginForm.LoginEvent;
@@ -34,7 +28,7 @@ public class LoginScreen extends VerticalLayout {
 	public LoginScreen(MyVaadinApplication app){
 		this.app=app;
 		
-		app.getMainWindow().setCaption(app.getMessage(PimMessages.AppTitle));
+		app.getMainWindow().setCaption("Login");
 		setSizeFull();
 		final HorizontalLayout languageBar=new HorizontalLayout();
 		languageBar.setHeight("50px");
@@ -42,23 +36,14 @@ public class LoginScreen extends VerticalLayout {
 		setComponentAlignment(languageBar, Alignment.TOP_RIGHT);
 		
 				
-		Button turkish=new Button(app.getMessage(PimMessages.AppLanguageTurkish));
-		turkish.addListener(new SwitchLanguage(app));
-		turkish.setEnabled(!app.getLocale().getLanguage().equals("tr"));
-		//languageBar.addComponent(turkish);
 		
-		Button russian=new Button(app.getMessage(PimMessages.AppLanguageRussian));
-		russian.addListener(new SwitchLanguage(app));
-		russian.setEnabled(!app.getLocale().getLanguage().equals("ru"));
-	//	languageBar.addComponent(russian);
-		
-		Panel loginPanel=new Panel(app.getMessage(PimMessages.Login));
+		Panel loginPanel=new Panel("Login");
 		loginPanel.setWidth("400px");
 		
 		LoginForm loginForm=new LoginForm();
-		loginForm.setPasswordCaption(app.getMessage(PimMessages.Password));
-		loginForm.setUsernameCaption(app.getMessage(PimMessages.Username));
-		loginForm.setLoginButtonCaption(app.getMessage(PimMessages.LoginButton));
+		loginForm.setPasswordCaption("Password");
+		loginForm.setUsernameCaption("Username");
+		loginForm.setLoginButtonCaption("Login");
 
 		loginForm.setHeight("120px");
 		loginForm.addListener(new MyLoginListener(this.app, loginForm));
@@ -127,27 +112,6 @@ public class LoginScreen extends VerticalLayout {
 		}
 		
 	}
-	
-	class SwitchLanguage implements Button.ClickListener{
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-		private MyVaadinApplication app;
-		
-		public SwitchLanguage(MyVaadinApplication app){
-			this.app=app;
-		}
-		public void buttonClick(ClickEvent event) {
-			if(app.getLocale().getLanguage().equals("tr"))
-				app.setLocale(new Locale("ru"));
-			else
-				app.setLocale(new Locale("tr"));
-			
-			app.getViewManager().switchScreen(LoginScreen.class.getName(), new LoginScreen(app));
-		}
-		
-	}
 
 }

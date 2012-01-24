@@ -1,6 +1,7 @@
 package kg.cloud.tuscon.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Person implements Serializable {
 
@@ -13,7 +14,8 @@ public class Person implements Serializable {
 	private String firstName = "";
 	private String lastName = "";
 	private String gender="";
-	private String dob="";
+	private Date dob=null;
+	private String company="";
 	private String email = "";
 	private String secondaryEmail="";
 	private String phoneNumber = "";
@@ -21,10 +23,10 @@ public class Person implements Serializable {
 	private String faxNumber="";
 	private String streetAddress = "";
 	private Integer postalCode = null;
-	private String city = "";
 	private String companyType ="";
 	private String websiteUrl="";
 	private String sektor="";
+	private String organization;
 	private String foundation="";
 	private String membership="";
 	private String common="";
@@ -32,15 +34,16 @@ public class Person implements Serializable {
 	public Person(){}
 	
 	public Person(Integer id, String fName, String lName,
-			String gender, String dob, String email, String sEmail,
+			String gender, Date dob,String company, String email, String sEmail,
 			String phone, String mobile, String fax, String street,
-			int postal, String city, String compType, String sektor,
+			int postal, String compType, String sektor,String organization,
 			String website, String found, String member, String common) {
 		this.id=id;
 		this.firstName=fName;
 		this.lastName=lName;
 		this.gender=gender;
 		this.dob=dob;
+		this.company=company;
 		this.email=email;
 		this.secondaryEmail=sEmail;
 		this.phoneNumber=phone;
@@ -48,9 +51,9 @@ public class Person implements Serializable {
 		this.faxNumber=fax;
 		this.streetAddress=street;
 		this.postalCode=postal;
-		this.city=city;
 		this.companyType=compType;
 		this.sektor=sektor;
+		this.organization=organization;
 		this.websiteUrl=website;
 		this.foundation=found;
 		this.membership=member;
@@ -105,14 +108,6 @@ public class Person implements Serializable {
 		this.postalCode = postalCode;
 	}
 
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
 	public Integer getId() {
 		return id;
 	}
@@ -129,11 +124,11 @@ public class Person implements Serializable {
 		this.gender = gender;
 	}
 
-	public String getDob() {
+	public Date getDob() {
 		return dob;
 	}
 
-	public void setDob(String dob) {
+	public void setDob(Date dob) {
 		this.dob = dob;
 	}
 
@@ -207,6 +202,22 @@ public class Person implements Serializable {
 
 	public void setCommon(String common) {
 		this.common = common;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+	public String getOrganization() {
+		return organization;
+	}
+
+	public void setOrganization(String organization) {
+		this.organization = organization;
 	}
 
 }
