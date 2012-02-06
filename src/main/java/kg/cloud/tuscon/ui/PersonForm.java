@@ -4,9 +4,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import kg.cloud.tuscon.AuthenticatedScreen;
+import kg.cloud.tuscon.MyVaadinApplication;
+import kg.cloud.tuscon.dao.DbPerson;
 import kg.cloud.tuscon.dao.PersonContainer;
-import kg.cloud.tuscon.domain.Membership;
 import kg.cloud.tuscon.domain.Person;
+
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.EmailValidator;
@@ -15,15 +17,16 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ListSelect;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Component;
 
 public class PersonForm extends Form implements ClickListener {
 
@@ -34,20 +37,22 @@ public class PersonForm extends Form implements ClickListener {
 	private Button save = new Button("Save", (ClickListener) this);
 	private Button cancel = new Button("Cancel", (ClickListener) this);
 	private Button edit = new Button("Edit", (ClickListener) this);
-	private Button delete=new Button("Delete",(ClickListener)this);
-	
-	private final Select organizations =new Select("Organization");
-	private final ComboBox memberships = new ComboBox("Membership");
+	private Button delete = new Button("Delete", (ClickListener) this);
+
+	private final Select organizations = new Select("Organization");
 	private final ListSelect sektors = new ListSelect("Sektors");
-	private final PopupDateField datetime=new PopupDateField("Date Of Birth");
+	private final PopupDateField datetime = new PopupDateField("Date Of Birth");
+	private final NativeSelect gender = new NativeSelect("Gender");
+	private final NativeSelect companyType = new NativeSelect("Company Type");
 
 	private AuthenticatedScreen as;
 	private boolean newContactMode = false;
 	private Person newPerson = null;
+	private MyVaadinApplication app;
 
-	public PersonForm(AuthenticatedScreen as) {
+	public PersonForm(MyVaadinApplication app, AuthenticatedScreen as) {
 		this.as = as;
-		
+		this.app = app;
 		setWriteThrough(false);
 		HorizontalLayout footer = new HorizontalLayout();
 		footer.setSpacing(true);
@@ -58,40 +63,13 @@ public class PersonForm extends Form implements ClickListener {
 		footer.setVisible(false);
 		setFooter(footer);
 
-		/* Allow the user to enter new cities */
-		organizations.setNewItemsAllowed(false);
-		/* We do not want to use null values */
-		organizations.setNullSelectionAllowed(false);
-		/* Add an empty city used for selecting no city */
-		//organizations.addItem("");
-		
+		// organization selec is beeing feeded
 		organizations.setContainerDataSource(as.getOrganizationsSource());
-		organizations.setItemCaptionMode(Select.ITEM_CAPTION_MODE_PROPERTY);
-		organizations.setItemCaptionPropertyId("orgName");
-		
-		memberships.setNewItemsAllowed(false);
-		/* We do not want to use null values */
-		memberships.setNullSelectionAllowed(false);
-		/* Add an empty city used for selecting no city */
-		//memberships.addItem("");
-		
-		
-		memberships.setContainerDataSource(as.getMembershipSource());
-		memberships.setItemCaptionMode(Select.ITEM_CAPTION_MODE_PROPERTY);
-		memberships.setItemCaptionPropertyId("unityName");
-		//memberships.setValue(this.getItemDataSource().getItemProperty("membership"));
-		
-		sektors.setRows(10);
-		sektors.setNullSelectionAllowed(true);
-		sektors.setMultiSelect(true);
-		//sektors.setImmediate(true);
-		sektors.setItemCaptionMode(Select.ITEM_CAPTION_MODE_PROPERTY);
-		sektors.setItemCaptionPropertyId("sektorName");
+
 		sektors.setContainerDataSource(as.getSektorsSource());
-		
-		
+
 		/* Populate cities select using the cities in the data container */
-		
+
 		/*
 		 * Field factory for overriding how the component for city selection is
 		 * created
@@ -107,44 +85,58 @@ public class PersonForm extends Form implements ClickListener {
 					Component uiContext) {
 				if (propertyId.equals("organization")) {
 					organizations.setWidth("200px");
+					/* Allow the user to enter new cities */
+					organizations.setNewItemsAllowed(false);
+					/* We do not want to use null values */
+					organizations.setNullSelectionAllowed(false);
+					/* Add an empty city used for selecting no city */
+					// organizations.addItem("");
+
+					organizations
+							.setItemCaptionMode(Select.ITEM_CAPTION_MODE_PROPERTY);
+					organizations.setItemCaptionPropertyId("id");
 					return organizations;
 				}
-				
-				if(propertyId.equals("membership")){
-					memberships.setWidth("200px");
-					return memberships;
-				}
-				if(propertyId.equals("sektor")){
+
+				if (propertyId.equals("sektor")) {
 					sektors.setWidth("200px");
+					sektors.setRows(10);
+					sektors.setNullSelectionAllowed(true);
+					sektors.setMultiSelect(true);
+					// sektors.setImmediate(true);
+					sektors.setItemCaptionMode(Select.ITEM_CAPTION_MODE_PROPERTY);
+					sektors.setItemCaptionPropertyId("sektorName");
+
 					return sektors;
 				}
-				if(propertyId.equals("dob")){
+				if (propertyId.equals("dob")) {
 					datetime.setWidth("200px");
 					datetime.setDateFormat("yyyy-MM-dd");
+					datetime.setRequired(true);
 					return datetime;
+				}
+				if (propertyId.equals("gender")) {
+					gender.setWidth("200px");
+					gender.addItem("Male");
+					gender.addItem("Female");
+					return gender;
+				}
+				if (propertyId.equals("companyType")) {
+					companyType.setWidth("200px");
+					companyType.addItem("Import");
+					companyType.addItem("Export");
+					companyType.addItem("Consultancy");
+					return companyType;
 				}
 
 				Field field = super.createField(item, propertyId, uiContext);
-				if (propertyId.equals("postalCode")) {
-					TextField tf = (TextField) field;
-					/*
-					 * We do not want to display "null" to the user when the
-					 * field is empty
-					 */
-					tf.setNullRepresentation("");
-
-					/* Add a validator for postalCode and make it required */
-					tf.addValidator(new RegexpValidator("[1-9][0-9]{4}",
-							"Postal code must be a five digit number and cannot start with a zero."));
-					tf.setRequired(true);
-				} else if (propertyId.equals("email")) {
+				if (propertyId.equals("email")) {
 					/* Add a validator for email and make it required */
 					field.addValidator(new EmailValidator(
 							"Email must contain '@' and have full domain."));
 					field.setRequired(true);
 
 				}
-
 				field.setWidth("200px");
 				return field;
 			}
@@ -161,11 +153,11 @@ public class PersonForm extends Form implements ClickListener {
 			}
 
 			commit();
+
 			if (newContactMode) {
+
 				/* We need to add the new person to the container */
-				newPerson.setMembership(memberships.getValue().toString());
-				newPerson.setOrganization(organizations.getValue().toString());
-				newPerson.setSektor(sektors.getValue().toString());
+
 				Item addedItem = as.getDataSource().addItem(newPerson);
 				/*
 				 * We must update the form to use the Item from our datasource
@@ -173,8 +165,35 @@ public class PersonForm extends Form implements ClickListener {
 				 */
 				setItemDataSource(addedItem);
 
+				try {
+					DbPerson dbP = new DbPerson();
+					dbP.connect();
+					dbP.execSQLInsert(newPerson);
+					dbP.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				newContactMode = false;
+			} else {
+				if (!newContactMode) {
+					BeanItem<Person> p = (BeanItem<Person>) this
+							.getItemDataSource();
+					try {
+						DbPerson dbP = new DbPerson();
+						dbP.connect();
+						dbP.execSQLUpdate(p.getBean());
+						dbP.close();
+
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					app.getMainWindow()
+							.showNotification("Updated Successfully");
+				}
 			}
+
 			setReadOnly(true);
 		} else if (source == cancel) {
 			if (newContactMode) {
@@ -187,6 +206,26 @@ public class PersonForm extends Form implements ClickListener {
 			setReadOnly(true);
 		} else if (source == edit) {
 			setReadOnly(false);
+		} else if (source == delete) {
+			if (!newContactMode) {
+				BeanItem<Person> p = (BeanItem<Person>) this
+						.getItemDataSource();
+				try {
+					DbPerson dbP = new DbPerson();
+					dbP.connect();
+					dbP.execSQLDelete(p.getBean());
+					dbP.close();
+
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				as.getDataSource().removeItem(p.getBean());
+				app.getMainWindow().showNotification(
+						p.getBean().getId()
+								+ "The contact is successfully deleted!");
+
+			}
 		}
 	}
 

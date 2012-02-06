@@ -10,8 +10,8 @@ import com.vaadin.data.util.BeanItemContainer;
 @SuppressWarnings("serial")
 public class OrganizationContainer extends BeanItemContainer<Organization> implements Serializable{
 
-	public static final Object[] NATURAL_COL_ORDER = new Object[] {"orgName"};
-	public static final String[] COL_HEADERS_ENGLISH = new String[] {"Organization" };
+	public static final Object[] NATURAL_COL_ORDER = new Object[] {"id","orgName"};
+	public static final String[] COL_HEADERS_ENGLISH = new String[] {"ID","Organization" };
 	
 	public OrganizationContainer(){
 		super(Organization.class);
@@ -29,7 +29,7 @@ public class OrganizationContainer extends BeanItemContainer<Organization> imple
 			orgList=dbOrg.getOrganizations();
 			dbOrg.close();
 			for(int i=0;i<orgList.size();i++){
-				c.addItem(orgList.get(i));
+				c.addBean(orgList.get(i));
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

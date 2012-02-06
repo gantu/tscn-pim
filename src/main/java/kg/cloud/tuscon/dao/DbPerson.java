@@ -1,5 +1,6 @@
 package kg.cloud.tuscon.dao;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,15 +19,15 @@ public class DbPerson extends BaseDb {
 
 	public void execSQLSelectAll() throws SQLException {
 		String query = "SELECT p.id, p.first_name,p.last_name,p.gender,p.dob,"
-				+ "p.company,p.email,p.second_email,p.phone,mobile,p.fax,p.street,p.postal_code,"
-				+ "p.company_type,p.sektor,p.website,p.foundation,m.unity_name,o.name,"
-				+ "p.common FROM person_info as p left join membership as m on p.membership_id=m.id left join organization as o" +
-				" on p.organization_id=o.id;";
+				+ "p.company,p.email,p.second_email,p.phone,mobile,p.fax,p.street,"
+				+ "p.company_type,p.sektor,p.website,p.foundation,p.membership,o.id,"
+				+ "p.common FROM person_info as p left join organization as o"
+				+ " on p.organization_id=o.id;";
 		persons = new ArrayList<Person>();
 		PreparedStatement stat = dbCon.prepareStatement(query);
 		ResultSet result = stat.executeQuery();
 		while (result.next()) {
-			Person p=new Person();
+			Person p = new Person();
 			p.setId(new Integer(result.getInt("p.id")));
 			p.setFirstName(result.getString("first_name"));
 			p.setLastName(result.getString("p.last_name"));
@@ -39,42 +40,40 @@ public class DbPerson extends BaseDb {
 			p.setMobilePhoneNumber(result.getString("p.mobile"));
 			p.setFaxNumber(result.getString("p.fax"));
 			p.setStreetAddress(result.getString("p.street"));
-			p.setPostalCode(result.getInt("p.postal_code"));
-		    p.setCompanyType(result.getString("p.company_type"));
-		    p.setSektor(result.getString("p.sektor"));
-		    p.setOrganization(result.getString("o.name"));
-		    p.setWebsiteUrl(result.getString("p.website"));
-		    p.setFoundation(result	.getString("p.foundation"));
-		    p.setMembership(result.getString("m.unity_name"));
-		    p.setCommon(result.getString("common"));
-		    persons.add(p);
+			p.setCompanyType(result.getString("p.company_type"));
+			p.setSektor(result.getString("p.sektor"));
+			p.setOrganization(result.getString("o.id"));
+			p.setWebsiteUrl(result.getString("p.website"));
+			p.setFoundation(result.getString("p.foundation"));
+			p.setMembership(result.getString("p.membership"));
+			p.setCommon(result.getString("common"));
+			persons.add(p);
 		}
-		
-		
-		
 
 	}
 
 	public void execSQLUpdate(Person p) throws SQLException {
 		String query = "UPDATE person_info SET first_name=?,last_name=?,gender=?,dob=?,"
-				+ "email=?,second_email=?,phone=?,mobile=?,fax=?,street=?,postal_code=?,"
-				+ "city=?,company_type=?,sektor=?,website=?,foundation=?,membership=?,"
+				+ "company=?,email=?,second_email=?,phone=?,mobile=?,fax=?,street=?,"
+				+ "company_type=?,sektor=?,organization_id=?,website=?,foundation=?,membership=?,"
 				+ "common=? WHERE id=?";
 		PreparedStatement stat = dbCon.prepareStatement(query);
+		Date sqlDate = new java.sql.Date(p.getDob().getTime());
+
 		stat.setString(1, p.getFirstName());
 		stat.setString(2, p.getLastName());
 		stat.setString(3, p.getGender());
-		//stat.setString(4, p.getDob());
-		stat.setString(5, p.getEmail());
-		stat.setString(6, p.getSecondaryEmail());
-		stat.setString(7, p.getPhoneNumber());
-		stat.setString(8, p.getMobilePhoneNumber());
+		stat.setDate(4, sqlDate);
+		stat.setString(5, p.getCompany());
+		stat.setString(6, p.getEmail());
+		stat.setString(7, p.getSecondaryEmail());
+		stat.setString(8, p.getPhoneNumber());
 		stat.setString(9, p.getMobilePhoneNumber());
-		stat.setString(10, p.getStreetAddress());
-		stat.setInt(11, p.getPostalCode());
-	
-		stat.setString(13, p.getCompanyType());
-		stat.setString(14, p.getSektor());
+		stat.setString(10, p.getFaxNumber());
+		stat.setString(11, p.getStreetAddress());
+		stat.setString(12, p.getCompanyType());
+		stat.setString(13, p.getSektor());
+		stat.setString(14, p.getOrganization());
 		stat.setString(15, p.getWebsiteUrl());
 		stat.setString(16, p.getFoundation());
 		stat.setString(17, p.getMembership());
@@ -85,21 +84,27 @@ public class DbPerson extends BaseDb {
 	}
 
 	public void execSQLInsert(Person p) throws SQLException {
-		String query = "INSERT INTO person_info VALUES('',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+		String query = "INSERT INTO person_info(first_name,last_name,gender,dob,company,email," +
+				"second_email,phone,mobile,fax,street,company_type,sektor," +
+				"organization_id,website,foundation,membership,common) " +
+				"VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
 		PreparedStatement stat = dbCon.prepareStatement(query);
+		Date sqlDate = new java.sql.Date(p.getDob().getTime());
+
 		stat.setString(1, p.getFirstName());
 		stat.setString(2, p.getLastName());
 		stat.setString(3, p.getGender());
-		//stat.setString(4, p.getDob());
-		stat.setString(5, p.getEmail());
-		stat.setString(6, p.getSecondaryEmail());
-		stat.setString(7, p.getPhoneNumber());
-		stat.setString(8, p.getMobilePhoneNumber());
+		stat.setDate(4, sqlDate);
+		stat.setString(5, p.getCompany());
+		stat.setString(6, p.getEmail());
+		stat.setString(7, p.getSecondaryEmail());
+		stat.setString(8, p.getPhoneNumber());
 		stat.setString(9, p.getMobilePhoneNumber());
-		stat.setString(10, p.getStreetAddress());
-		stat.setInt(11, p.getPostalCode());
-		stat.setString(13, p.getCompanyType());
-		stat.setString(14, p.getSektor());
+		stat.setString(10, p.getFaxNumber());
+		stat.setString(11, p.getStreetAddress());
+		stat.setString(12, p.getCompanyType());
+		stat.setString(13, p.getSektor());
+		stat.setString(14, p.getOrganization());
 		stat.setString(15, p.getWebsiteUrl());
 		stat.setString(16, p.getFoundation());
 		stat.setString(17, p.getMembership());

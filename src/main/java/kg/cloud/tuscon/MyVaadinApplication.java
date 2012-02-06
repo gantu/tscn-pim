@@ -15,8 +15,6 @@
  */
 package kg.cloud.tuscon;
 
-import kg.cloud.tuscon.dao.PersonContainer;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;

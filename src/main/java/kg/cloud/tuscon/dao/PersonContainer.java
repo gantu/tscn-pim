@@ -15,12 +15,12 @@ public class PersonContainer extends BeanItemContainer<Person> implements
 	public static final Object[] NATURAL_COL_ORDER = new Object[] {
 			"firstName", "lastName", "gender", "dob", "company", "email",
 			"secondaryEmail", "phoneNumber", "mobilePhoneNumber", "faxNumber",
-			"streetAddress", "postalCode", "companyType", "websiteUrl",
+			"streetAddress","companyType", "websiteUrl",
 			"sektor", "organization", "foundation", "membership", "common" };
 
 	public static final String[] COL_HEADERS_ENGLISH = new String[] {
 			"First name", "Last name","Gender","Date Of Birth","Company","E-mail","2nd e-mail","Phone number","Mobile","Fax",
-			"Street Address", "Postal Code","Company Type","Website","sektor","Organization","Foundation","Membership","Common" };
+			"Street Address","Company Type","Website","sektor","Organization","Foundation","Membership","Common" };
 
 	public PersonContainer() throws InstantiationException,
 			IllegalAccessException {
@@ -73,7 +73,7 @@ public class PersonContainer extends BeanItemContainer<Person> implements
 				if (n < 10000) {
 					n += 10000;
 				}
-				p.setPostalCode(n);
+				//p.setPostalCode(n);
 				p.setStreetAddress(streets[r.nextInt(streets.length)]);
 				c.addItem(p);
 			}

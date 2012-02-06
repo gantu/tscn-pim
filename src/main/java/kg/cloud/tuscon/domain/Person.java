@@ -22,7 +22,6 @@ public class Person implements Serializable {
 	private String mobilePhoneNumber="";
 	private String faxNumber="";
 	private String streetAddress = "";
-	private Integer postalCode = null;
 	private String companyType ="";
 	private String websiteUrl="";
 	private String sektor="";
@@ -36,7 +35,7 @@ public class Person implements Serializable {
 	public Person(Integer id, String fName, String lName,
 			String gender, Date dob,String company, String email, String sEmail,
 			String phone, String mobile, String fax, String street,
-			int postal, String compType, String sektor,String organization,
+			String compType, String sektor,String organization,
 			String website, String found, String member, String common) {
 		this.id=id;
 		this.firstName=fName;
@@ -50,7 +49,6 @@ public class Person implements Serializable {
 		this.mobilePhoneNumber=mobile;
 		this.faxNumber=fax;
 		this.streetAddress=street;
-		this.postalCode=postal;
 		this.companyType=compType;
 		this.sektor=sektor;
 		this.organization=organization;
@@ -100,14 +98,7 @@ public class Person implements Serializable {
 		this.streetAddress = streetAddress;
 	}
 
-	public Integer getPostalCode() {
-		return postalCode;
-	}
-
-	public void setPostalCode(Integer postalCode) {
-		this.postalCode = postalCode;
-	}
-
+	
 	public Integer getId() {
 		return id;
 	}

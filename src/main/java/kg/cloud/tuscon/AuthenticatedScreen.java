@@ -1,9 +1,9 @@
 package kg.cloud.tuscon;
 
-import kg.cloud.tuscon.dao.MembershipContainer;
 import kg.cloud.tuscon.dao.OrganizationContainer;
 import kg.cloud.tuscon.dao.PersonContainer;
 import kg.cloud.tuscon.dao.SektorContainer;
+import kg.cloud.tuscon.dao.UserContainer;
 import kg.cloud.tuscon.domain.SearchFilter;
 import kg.cloud.tuscon.ui.HelpWindow;
 import kg.cloud.tuscon.ui.ListView;
@@ -44,6 +44,7 @@ public class AuthenticatedScreen extends VerticalLayout implements
 	private Button search;
 	private Button share;
 	private Button help;
+	private Button logout;
 	private NavigationTree navTree = new NavigationTree();
 	private ListView listView = null;
 	private PersonForm personForm = null;
@@ -56,18 +57,23 @@ public class AuthenticatedScreen extends VerticalLayout implements
 	private PersonContainer dataSource = PersonContainer.getAllFromDB();
 	private OrganizationContainer organizationsSource = OrganizationContainer
 			.getAllFromDb();
-	private MembershipContainer membershipSource = MembershipContainer
-			.getAllFromDb();
+	/*
+	 * private MembershipContainer membershipSource = MembershipContainer
+	 * .getAllFromDb();
+	 */
 
 	private SektorContainer sektorsSource = SektorContainer.getAllFromDb();
-	
+	private UserContainer userSource = UserContainer.getAllFromDb();
+	private SearchFilter sf;
+
 	public AuthenticatedScreen(MyVaadinApplication app) {
 		this.app = app;
 
 		newContact = new Button("Add contact");
 		search = new Button("Search");
 		share = new Button("Share");
-		help = new Button("Help");
+		help = new Button("Settings");
+		logout = new Button("Logout");
 
 		this.addComponent(createToolbar());
 		this.addComponent(hSplitPanel);
@@ -88,16 +94,19 @@ public class AuthenticatedScreen extends VerticalLayout implements
 		toolBar.addComponent(search);
 		toolBar.addComponent(share);
 		toolBar.addComponent(help);
+		toolBar.addComponent(logout);
 
 		search.addListener((ClickListener) this);
 		share.addListener((ClickListener) this);
 		help.addListener((ClickListener) this);
 		newContact.addListener((ClickListener) this);
+		logout.addListener((ClickListener) this);
 
 		search.setIcon(new ThemeResource("icons/32/folder-add.png"));
 		share.setIcon(new ThemeResource("icons/32/users.png"));
-		help.setIcon(new ThemeResource("icons/32/help.png"));
+		help.setIcon(new ThemeResource("icons/32/settings.png"));
 		newContact.setIcon(new ThemeResource("icons/32/document-add.png"));
+		logout.setIcon(new ThemeResource("icons/32/cancel.png"));
 
 		toolBar.setMargin(true);
 		toolBar.setSpacing(true);
@@ -105,10 +114,9 @@ public class AuthenticatedScreen extends VerticalLayout implements
 		toolBar.setStyleName("toolbar");
 
 		toolBar.setWidth("100%");
-
 		Embedded em = new Embedded("", new ThemeResource("images/logo.png"));
 		toolBar.addComponent(em);
-		toolBar.setComponentAlignment(em, Alignment.MIDDLE_RIGHT);
+		toolBar.setComponentAlignment(em, Alignment.TOP_RIGHT);
 		toolBar.setExpandRatio(em, 1);
 		return toolBar;
 	}
@@ -143,7 +151,7 @@ public class AuthenticatedScreen extends VerticalLayout implements
 
 	private SharingOptions getSharingOptions() {
 		if (sharingOptions == null) {
-			sharingOptions = new SharingOptions();
+			sharingOptions = new SharingOptions(this);
 		}
 		return sharingOptions;
 	}
@@ -152,7 +160,7 @@ public class AuthenticatedScreen extends VerticalLayout implements
 		if (listView == null) {
 			personList = new PersonList(this);
 			personList.addListener((ValueChangeListener) this);
-			personForm = new PersonForm(this);
+			personForm = new PersonForm(app, this);
 			listView = new ListView(personList, personForm);
 		}
 
@@ -161,7 +169,7 @@ public class AuthenticatedScreen extends VerticalLayout implements
 
 	private HelpWindow getHelpWindow() {
 		if (helpWindow == null) {
-			helpWindow = new HelpWindow();
+			helpWindow = new HelpWindow(this, app);
 		}
 
 		return helpWindow;
@@ -174,6 +182,7 @@ public class AuthenticatedScreen extends VerticalLayout implements
 				if (NavigationTree.SHOW_ALL.equals(itemId)) {
 					// clear previous filters
 					getDataSource().removeAllContainerFilters();
+					setSf(null);
 					showListView();
 				} else if (NavigationTree.SEARCH.equals(itemId)) {
 					showSearchView();
@@ -191,6 +200,7 @@ public class AuthenticatedScreen extends VerticalLayout implements
 		// filter contacts with given filter
 		getDataSource().addContainerFilter(searchFilter.getPropertyId(),
 				searchFilter.getTerm(), true, false);
+		setSf(searchFilter);
 		showListView();
 
 		app.getMainWindow().showNotification(
@@ -221,6 +231,8 @@ public class AuthenticatedScreen extends VerticalLayout implements
 			showShareWindow();
 		} else if (source == newContact) {
 			addNewContanct();
+		} else if (source == logout) {
+			app.logout();
 		}
 
 	}
@@ -249,12 +261,20 @@ public class AuthenticatedScreen extends VerticalLayout implements
 		return organizationsSource;
 	}
 
-	public MembershipContainer getMembershipSource() {
-		return membershipSource;
-	}
-
 	public SektorContainer getSektorsSource() {
 		return sektorsSource;
+	}
+
+	public UserContainer getUserSource() {
+		return userSource;
+	}
+
+	public SearchFilter getSf() {
+		return sf;
+	}
+
+	public void setSf(SearchFilter sf) {
+		this.sf = sf;
 	}
 
 }

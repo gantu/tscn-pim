@@ -10,9 +10,9 @@ import com.vaadin.data.util.BeanItemContainer;
 @SuppressWarnings("serial")
 public class MembershipContainer extends BeanItemContainer<Membership> implements Serializable{
 	
-	public static final Object[] NATURAL_COL_ORDER = new Object[] {"unityName"};
+	public static final Object[] NATURAL_COL_ORDER = new Object[] {"id","unityName"};
 
-	public static final String[] COL_HEADERS_ENGLISH = new String[] {"Dernek Name" };
+	public static final String[] COL_HEADERS_ENGLISH = new String[] {"ID","Dernek Name" };
 
 	public MembershipContainer (){
 		super(Membership.class);
@@ -30,7 +30,7 @@ public class MembershipContainer extends BeanItemContainer<Membership> implement
 			dbMem.close();
 			
 			for(int i=0;i<memList.size();i++){
-				c.addItem(memList.get(i));
+				c.addBean(memList.get(i));
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

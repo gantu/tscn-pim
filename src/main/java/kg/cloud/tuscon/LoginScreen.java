@@ -28,7 +28,7 @@ public class LoginScreen extends VerticalLayout {
 	public LoginScreen(MyVaadinApplication app){
 		this.app=app;
 		
-		app.getMainWindow().setCaption("Login");
+		app.getMainWindow().setCaption("PIM");
 		setSizeFull();
 		final HorizontalLayout languageBar=new HorizontalLayout();
 		languageBar.setHeight("50px");

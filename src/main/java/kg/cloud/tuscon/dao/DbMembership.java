@@ -23,7 +23,7 @@ public class DbMembership extends BaseDb {
 		ResultSet result = stat.executeQuery();
 		while(result.next()){
 			Membership m=new Membership();
-			m.setId(result.getInt("id"));
+			m.setId(result.getString("id"));
 			m.setUnityName(result.getString("unity_name"));
 			memberships.add(m);
 		}

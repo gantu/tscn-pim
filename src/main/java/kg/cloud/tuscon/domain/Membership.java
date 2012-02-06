@@ -5,16 +5,16 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class Membership implements Serializable{
 	
-	private int id;
+	private String id;
 	private String unityName;
 	
 	public Membership(){}
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -24,7 +24,7 @@ public class Membership implements Serializable{
 
 	@Override
 	public String toString() {
-		return unityName;
+		return id;
 	}
 
 	public void setUnityName(String unityName) {

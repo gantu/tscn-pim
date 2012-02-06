@@ -4,14 +4,14 @@ import java.io.Serializable;
 
 @SuppressWarnings("serial")
 public class Organization implements Serializable{
-	private int id;
+	private String id;
 	private String orgName;
 	public Organization(){}
 	
-	public int getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public String getOrgName() {
@@ -22,6 +22,6 @@ public class Organization implements Serializable{
 	}
 
 	public String toString(){
-		return orgName;
+		return id;
 	}
 }
