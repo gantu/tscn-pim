@@ -13,6 +13,7 @@ import kg.cloud.tuscon.ui.PersonList;
 import kg.cloud.tuscon.ui.SearchView;
 import kg.cloud.tuscon.ui.SharingOptions;
 
+import com.vaadin.addon.tableexport.ExcelExport;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -45,6 +46,7 @@ public class AuthenticatedScreen extends VerticalLayout implements
 	private Button share;
 	private Button help;
 	private Button logout;
+	private Button export;
 	private NavigationTree navTree = new NavigationTree();
 	private ListView listView = null;
 	private PersonForm personForm = null;
@@ -52,6 +54,7 @@ public class AuthenticatedScreen extends VerticalLayout implements
 	private HelpWindow helpWindow = null;
 	private SearchView searchView = null;
 	private SharingOptions sharingOptions = null;
+	private ExcelExport excelExport;
 	MyVaadinApplication app;
 
 	private PersonContainer dataSource = PersonContainer.getAllFromDB();
@@ -74,6 +77,7 @@ public class AuthenticatedScreen extends VerticalLayout implements
 		share = new Button("Share");
 		help = new Button("Settings");
 		logout = new Button("Logout");
+		export = new Button("Export");
 
 		this.addComponent(createToolbar());
 		this.addComponent(hSplitPanel);
@@ -93,6 +97,7 @@ public class AuthenticatedScreen extends VerticalLayout implements
 		toolBar.addComponent(newContact);
 		toolBar.addComponent(search);
 		toolBar.addComponent(share);
+		toolBar.addComponent(export);
 		toolBar.addComponent(help);
 		toolBar.addComponent(logout);
 
@@ -101,12 +106,14 @@ public class AuthenticatedScreen extends VerticalLayout implements
 		help.addListener((ClickListener) this);
 		newContact.addListener((ClickListener) this);
 		logout.addListener((ClickListener) this);
+		export.addListener((ClickListener) this);
 
 		search.setIcon(new ThemeResource("icons/32/folder-add.png"));
 		share.setIcon(new ThemeResource("icons/32/users.png"));
 		help.setIcon(new ThemeResource("icons/32/settings.png"));
 		newContact.setIcon(new ThemeResource("icons/32/document-add.png"));
 		logout.setIcon(new ThemeResource("icons/32/cancel.png"));
+		export.setIcon(new ThemeResource("icons/32/document-xsl.png"));
 
 		toolBar.setMargin(true);
 		toolBar.setSpacing(true);
@@ -233,6 +240,13 @@ public class AuthenticatedScreen extends VerticalLayout implements
 			addNewContanct();
 		} else if (source == logout) {
 			app.logout();
+		} else if (source == export) {
+			if (personList != null) {
+				excelExport = new ExcelExport(personList, "sheet1");
+				excelExport.excludeCollapsedColumns();
+				excelExport.setReportTitle("Demo Report");
+				excelExport.export();
+			}
 		}
 
 	}

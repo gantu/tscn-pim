@@ -1,12 +1,15 @@
 package kg.cloud.tuscon.ui;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import kg.cloud.tuscon.AuthenticatedScreen;
 import kg.cloud.tuscon.MyVaadinApplication;
 import kg.cloud.tuscon.dao.DbPerson;
+import kg.cloud.tuscon.dao.OrganizationContainer;
 import kg.cloud.tuscon.dao.PersonContainer;
+import kg.cloud.tuscon.dao.SektorContainer;
 import kg.cloud.tuscon.domain.Person;
 
 import com.vaadin.data.Item;
@@ -39,7 +42,7 @@ public class PersonForm extends Form implements ClickListener {
 	private Button edit = new Button("Edit", (ClickListener) this);
 	private Button delete = new Button("Delete", (ClickListener) this);
 
-	private final Select organizations = new Select("Organization");
+	private final NativeSelect organizations = new NativeSelect("Organization");
 	private final ListSelect sektors = new ListSelect("Sektors");
 	private final PopupDateField datetime = new PopupDateField("Date Of Birth");
 	private final NativeSelect gender = new NativeSelect("Gender");
@@ -62,11 +65,18 @@ public class PersonForm extends Form implements ClickListener {
 		footer.addComponent(delete);
 		footer.setVisible(false);
 		setFooter(footer);
-
+		
 		// organization selec is beeing feeded
-		organizations.setContainerDataSource(as.getOrganizationsSource());
-
+		OrganizationContainer orgContainer=as.getOrganizationsSource();
+		for(int i=0;i<orgContainer.size();i++){
+			organizations.addItem(orgContainer.getIdByIndex(i).getId());
+		}
+		//organizations.setContainerDataSource(as.getOrganizationsSource());
 		sektors.setContainerDataSource(as.getSektorsSource());
+		
+		
+		
+	
 
 		/* Populate cities select using the cities in the data container */
 
@@ -85,16 +95,14 @@ public class PersonForm extends Form implements ClickListener {
 					Component uiContext) {
 				if (propertyId.equals("organization")) {
 					organizations.setWidth("200px");
-					/* Allow the user to enter new cities */
-					organizations.setNewItemsAllowed(false);
 					/* We do not want to use null values */
 					organizations.setNullSelectionAllowed(false);
 					/* Add an empty city used for selecting no city */
 					// organizations.addItem("");
-
-					organizations
+					organizations.setImmediate(true);
+				/*	organizations
 							.setItemCaptionMode(Select.ITEM_CAPTION_MODE_PROPERTY);
-					organizations.setItemCaptionPropertyId("id");
+					organizations.setItemCaptionPropertyId("id");*/
 					return organizations;
 				}
 
@@ -103,10 +111,11 @@ public class PersonForm extends Form implements ClickListener {
 					sektors.setRows(10);
 					sektors.setNullSelectionAllowed(true);
 					sektors.setMultiSelect(true);
-					// sektors.setImmediate(true);
+					sektors.setImmediate(true);
 					sektors.setItemCaptionMode(Select.ITEM_CAPTION_MODE_PROPERTY);
 					sektors.setItemCaptionPropertyId("sektorName");
-
+					sektors.setRequired(true);
+					sektors.setRequiredError("You must select at least one sektor!");
 					return sektors;
 				}
 				if (propertyId.equals("dob")) {

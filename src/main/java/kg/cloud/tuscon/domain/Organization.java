@@ -6,6 +6,7 @@ import java.io.Serializable;
 public class Organization implements Serializable{
 	private String id;
 	private String orgName;
+	
 	public Organization(){}
 	
 	public String getId() {
